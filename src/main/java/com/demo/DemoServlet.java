@@ -25,6 +25,17 @@ public class DemoServlet extends HttpServlet {
         orgs.add(new Organization(3,"Adoptee3"));
     }
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
+        System.out.println(id);
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        if(id == null){
+            out.println(new Gson().toJson(orgs));
+        }else{
+            out.println(new Gson().toJson(orgs.get(Integer.parseInt((id))-1)));
+        }
+    }
 
 
 }
