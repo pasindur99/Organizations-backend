@@ -5,7 +5,7 @@ public class Organization {
     private int id;
     private String name;
 
-    public Organization(int id, String name){
+    public void addOrg(int id, String name){
         this.id=id;
         this.name=name;
     }
@@ -24,5 +24,13 @@ public class Organization {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
