@@ -2,36 +2,63 @@ package com.demo.services;
 
 import com.demo.entities.Organization;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrganizationService {
-    private static List<Organization> orgs = new ArrayList<>();
+    //private static List<Organization> orgs = new ArrayList<>();
 
-    public Organization saveUser(int id, String name){
-        Organization org = new Organization();
-        orgs.add(org);
-        return org;
-    }
+//    public Organization saveUser(int id, String name){
+//        Organization org = new Organization();
+//        orgs.add(org);
+//        return org;
+//    }
 
     public List<Organization> getAll(){
-        return orgs;
+
+        List<Organization> organizations = new ArrayList<>();
+
+        try {
+            Connection connection  = DatabaseConnections.getConnection();
+            Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery("select * from organization");
+
+            while (rs.next()) {
+                Organization org = new Organization();
+                org.setId(rs.getInt("id"));
+                org.setName(rs.getString("name"));
+                organizations.add(org);
+            }
+
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return organizations;
     }
 
     public Organization getOne(int id){
-        return orgs.get(id);
-    }
+        Organization org = null;
+        try {
+            Connection connection  = DatabaseConnections.getConnection();
+            Statement statement = connection.createStatement();
 
-    public void remove(int id){
-        orgs.remove(id);
-    }
+            ResultSet rs = statement.executeQuery("select * from organization where id = " + id);
 
-    public Organization update(int id, String name){
+            if (rs.next()){
+                org = new Organization();
+                org.setId(rs.getInt("id"));
+                org.setName(rs.getString("name"));
+            }
 
-        Organization organization = orgs.get(id);
-        organization.setName(name);
-
-        return organization;
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return org;
     }
 
 }

@@ -6,19 +6,26 @@ import java.sql.SQLException;
 
 public class DatabaseConnections {
 
-    public static Connection initializeDatabase() throws SQLException, ClassNotFoundException{
+    private static Connection connection;
+
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+
+        if (connection == null){
+            initializeDatabase();
+        }
+        return connection;
+    }
+    
+    private static void initializeDatabase() throws SQLException, ClassNotFoundException{
 
         String dbDriver = "com.mysql.jdbc.Driver";
         String dbURL = "jdbc:mysql://localhost:3306/";
 
-        String dbName = "organizations";
-        String dbUsername = "root";
-        String dbPassword = "pas.pas.pas.";
+        String dbName = System.getenv("DB_NAME");
+        String dbUsername = System.getenv("DB_USERNAME");
+        String dbPassword = System.getenv("DB_PASSWORD");
 
         Class.forName(dbDriver);
-        Connection con = DriverManager.getConnection(dbURL + dbName, dbUsername, dbPassword);
-
-        return con;
-
+        connection = DriverManager.getConnection(dbURL + dbName, dbUsername, dbPassword);
     }
 }
