@@ -1,4 +1,4 @@
-package com.demo.repositories;
+package com.repositories;
 
 public class OrganizationRepo {
 }

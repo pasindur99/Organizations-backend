@@ -6,8 +6,9 @@
 5. execute the query
 7. close
  */
-package com.demo.services;
-import com.demo.entities.Organization;
+package com.services;
+import com.entities.Organization;
+
 import java.sql.*;
 
 public class OrgDao {

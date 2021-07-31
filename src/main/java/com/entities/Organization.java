@@ -1,4 +1,4 @@
-package com.demo.entities;
+package com.entities;
 
 public class Organization {
 
