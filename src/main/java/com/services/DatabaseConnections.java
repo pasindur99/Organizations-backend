@@ -19,7 +19,7 @@ public class DatabaseConnections {
     private static void initializeDatabase() throws SQLException, ClassNotFoundException{
 
         String dbDriver = "com.mysql.jdbc.Driver";
-        String dbURL = "jdbc:mysql://localhost:3306/";
+        String dbURL = System.getenv("DB_URL");
 
         String dbName = System.getenv("DB_NAME");
         String dbUsername = System.getenv("DB_USERNAME");
