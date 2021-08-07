@@ -2,10 +2,7 @@ package com.services;
 
 import com.entities.Organization;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,10 +52,32 @@ public class OrganizationService {
                 org.setName(rs.getString("name"));
             }
 
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | ClassNotFoundException throwable) {
+            throwable.printStackTrace();
         }
         return org;
     }
 
+    public void saveOrganization(int id, String name){
+
+        try{
+            Connection connection = DatabaseConnections.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("insert into orgizations values(?,?)");
+            statement.setInt(1,id);
+            statement.setString(2,name);
+
+            statement.executeUpdate();
+            statement.close();
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+/*
+ResultSet rs = statement.executeQuery("update organization set name =" + name + "where id = " + id);
+ */

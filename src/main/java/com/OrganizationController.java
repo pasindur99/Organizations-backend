@@ -17,14 +17,18 @@ import java.io.PrintWriter;
 @WebServlet("/organizations")
 public class OrganizationController extends HttpServlet{
     private static final OrganizationService organizationService = new OrganizationService();
-    /*
-        private static final OrganizationService service = new OrganizationService();
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
                 IOException {
 
             int id = Integer.parseInt(request.getParameter("id"));
             String name = request.getParameter("name");
 
+            organizationService.saveOrganization(id,name);
+
+//            response.setContentType("text/json");
+//            PrintWriter out = response.getWriter();
+//            out.println("Successful");
+            /*
             Organization org = new Organization();
             org.setId(id);
             org.setName(name);
@@ -41,8 +45,9 @@ public class OrganizationController extends HttpServlet{
             PrintWriter out = response.getWriter();
             out.println(new Gson().toJson(updatedOrganization));
 
+             */
+
         }
-         */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
