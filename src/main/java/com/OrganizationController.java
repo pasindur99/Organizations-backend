@@ -20,10 +20,12 @@ public class OrganizationController extends HttpServlet{
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
                 IOException {
 
-            int id = Integer.parseInt(request.getParameter("id"));
             String name = request.getParameter("name");
 
-            organizationService.saveOrganization(id,name);
+            Organization organization = organizationService.saveOrganization(name);
+            response.setContentType("text/json");
+            PrintWriter out = response.getWriter();
+            out.println(new Gson().toJson(organization));
 
 //            response.setContentType("text/json");
 //            PrintWriter out = response.getWriter();
