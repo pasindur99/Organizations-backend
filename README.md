@@ -6,5 +6,5 @@ REST API for Organization site back-end.
 
 ```
 cd database
-docker compose up
+sudo docker-compose up
 ```
