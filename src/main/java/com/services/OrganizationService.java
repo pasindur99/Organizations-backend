@@ -20,7 +20,7 @@ public class OrganizationService {
         List<Organization> organizations = new ArrayList<>();
 
         try {
-            Connection connection  = DatabaseConnections.getConnection();
+            Connection connection  = DatabaseConnection.getConnection();
             Statement statement = connection.createStatement();
 
             ResultSet rs = statement.executeQuery("select * from organization");
@@ -41,7 +41,7 @@ public class OrganizationService {
     public Organization getOne(int id){
         Organization org = null;
         try {
-            Connection connection  = DatabaseConnections.getConnection();
+            Connection connection  = DatabaseConnection.getConnection();
             Statement statement = connection.createStatement();
 
             ResultSet rs = statement.executeQuery("select * from organization where id = " + id);
@@ -58,16 +58,22 @@ public class OrganizationService {
         return org;
     }
 
-    public void saveOrganization(int id, String name){
-
+    public Organization saveOrganization(String name){
+        Organization organization = null;
         try{
-            Connection connection = DatabaseConnections.getConnection();
+            Connection connection = DatabaseConnection.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("insert into orgizations values(?,?)");
-            statement.setInt(1,id);
-            statement.setString(2,name);
-
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO organization (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1,name);
             statement.executeUpdate();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    organization = getOne(generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Creating organisation failed, no ID obtained.");
+                }
+            }
             statement.close();
 
         } catch (SQLException throwable) {
@@ -75,6 +81,7 @@ public class OrganizationService {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return organization;
     }
 
 }
