@@ -29,3 +29,4 @@ public class DatabaseConnection {
         connection = DriverManager.getConnection(dbURL + dbName, dbUsername, dbPassword);
     }
 }
+

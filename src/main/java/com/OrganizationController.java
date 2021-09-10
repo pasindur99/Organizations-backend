@@ -54,13 +54,9 @@ public class OrganizationController extends HttpServlet{
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        System.out.println("DELETE");
         int id = Integer.parseInt(request.getParameter("id"));
         organizationService.deleteOrg(id);
 
-        response.setContentType("text/json");
-        PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(organizationService.getAll()));
     }
 
     @Override
@@ -74,5 +70,5 @@ public class OrganizationController extends HttpServlet{
         PrintWriter out = response.getWriter();
         out.println(new Gson().toJson(organization));
     }
-
 }
+
