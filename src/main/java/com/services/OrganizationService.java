@@ -7,13 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrganizationService {
-    //private static List<Organization> orgs = new ArrayList<>();
-
-//    public Organization saveUser(int id, String name){
-//        Organization org = new Organization();
-//        orgs.add(org);
-//        return org;
-//    }
 
     public List<Organization> getAll(){
 
@@ -65,8 +58,10 @@ public class OrganizationService {
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO organization (name) VALUES (?)",
                     Statement.RETURN_GENERATED_KEYS);
+
             statement.setString(1,name);
             statement.executeUpdate();
+
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     organization = getOne(generatedKeys.getInt(1));
@@ -89,9 +84,10 @@ public class OrganizationService {
 
         try {
             Connection connection = DatabaseConnection.getConnection();
-            Statement statement = connection.createStatement();
-
-            statement.execute("DELETE FROM organization WHERE id = " + id);
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM organization WHERE id = ?");
+            statement.setInt(1,id);
+            statement.executeUpdate();
+            statement.close();
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
@@ -99,7 +95,25 @@ public class OrganizationService {
             e.printStackTrace();
         }
     }
+
+    public Organization updateOrg (int id , String name) {
+        Organization organization = null;
+        System.out.println("idpan");
+
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE organization SET name = ? WHERE id = ? ");
+            statement.setString(1,name);
+            statement.setInt(2,id);
+            statement.executeUpdate();
+            statement.close();
+            organization = getOne(id);
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return organization;
+    }
 }
-/*
-ResultSet rs = statement.executeQuery("update organization set name =" + name + "where id = " + id);
- */
