@@ -27,27 +27,6 @@ public class OrganizationController extends HttpServlet{
             PrintWriter out = response.getWriter();
             out.println(new Gson().toJson(organization));
 
-//            response.setContentType("text/json");
-//            PrintWriter out = response.getWriter();
-//            out.println("Successful");
-            /*
-            Organization org = new Organization();
-            org.setId(id);
-            org.setName(name);
-
-            Organization updatedOrganization = service.saveUser(id,name);
-            PrintWriter out = response.getWriter();
-            out.println(new Gson().toJson(updatedOrganization));
-
-            response.setContentType("text/json");
-            System.out.println("POST");
-            int id = Integer.parseInt(request.getParameter("id"));
-            String name = request.getParameter("name");
-            Organization updatedOrganization = service.saveUser(id,name);
-            PrintWriter out = response.getWriter();
-            out.println(new Gson().toJson(updatedOrganization));
-
-             */
 
         }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -73,14 +52,20 @@ public class OrganizationController extends HttpServlet{
         }
     }
 
-/*
+    @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
         System.out.println("DELETE");
-        int id = Integer.parseInt(request.getParameter("id")) - 1;
-        service.remove(id);
+        int id = Integer.parseInt(request.getParameter("id"));
+        organizationService.deleteOrg(id);
+
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        out.println(new Gson().toJson(organizationService.getAll()));
     }
+
+    /*
 
     private int retrieveUserid(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();

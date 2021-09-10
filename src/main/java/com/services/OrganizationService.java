@@ -63,7 +63,8 @@ public class OrganizationService {
         try{
             Connection connection = DatabaseConnection.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO organization (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO organization (name) VALUES (?)",
+                    Statement.RETURN_GENERATED_KEYS);
             statement.setString(1,name);
             statement.executeUpdate();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -84,6 +85,20 @@ public class OrganizationService {
         return organization;
     }
 
+    public void deleteOrg (int id){
+
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            Statement statement = connection.createStatement();
+
+            statement.execute("DELETE FROM organization WHERE id = " + id);
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
 /*
 ResultSet rs = statement.executeQuery("update organization set name =" + name + "where id = " + id);
