@@ -1,14 +1,15 @@
 package com;
 
 import com.entities.Organization;
-import com.services.OrganizationService;
 import com.google.gson.Gson;
+import com.services.OrganizationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -17,17 +18,50 @@ import java.io.PrintWriter;
 public class OrganizationController extends HttpServlet{
     private static final OrganizationService organizationService = new OrganizationService();
 
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-                IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+            IOException {
 
-            String name = request.getParameter("name");
-            Organization organization = organizationService.saveOrganization(name);
+//            Try 1
+//            StringBuffer jo = new StringBuffer();
+//            String line = null;
+//
+//            try {
+//                BufferedReader reader = request.getReader();
+//                while ((line = reader.readLine()) != null)
+//                    jo.append(line);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                JsonObject jsonObject =  HTTP.toJSONObject(jo.toString());
+//            } catch (JSONException e) {
+//                // crash and burn
+//                throw new IOException("Error parsing JSON request string");
+//            }
 
-            response.setContentType("text/json");
-            PrintWriter out = response.getWriter();
-            out.println(new Gson().toJson(organization));
-
+//            Try 2
+        StringBuilder org = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                org.append(line).append('\n');
+            }
+        } finally {
+            reader.close();
         }
+
+        Gson gson = new Gson();
+        Organization newOrganization = gson.fromJson(org.toString(), Organization.class);
+
+        Organization organization = organizationService.saveOrganization(newOrganization.getName());
+
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+        out.println(new Gson().toJson(organization));
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
@@ -60,7 +94,8 @@ public class OrganizationController extends HttpServlet{
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+            IOException {
 
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
