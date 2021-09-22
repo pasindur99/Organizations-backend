@@ -92,9 +92,7 @@ public class OrganizationController extends HttpServlet{
         Gson gson = new Gson();
         Organization updatedOrganization = gson.fromJson(org.toString(), Organization.class);
 
-        int id = updatedOrganization.getId();
-        String name = updatedOrganization.getName();
-        Organization organization = organizationService.updateOrg(id,name);
+        Organization organization = organizationService.updateOrg(updatedOrganization);
 
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
