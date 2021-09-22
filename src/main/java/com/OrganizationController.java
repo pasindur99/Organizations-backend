@@ -26,7 +26,7 @@ public class OrganizationController extends HttpServlet{
         try {
             String line;
             while ((line = reader.readLine()) != null) {
-                builder.append(line).append('\n');
+                builder.append(line);
             }
         } finally {
             reader.close();
@@ -83,7 +83,7 @@ public class OrganizationController extends HttpServlet{
         try {
             String line;
             while ((line = reader.readLine()) != null) {
-                builder.append(line).append("\n");
+                builder.append(line);
             }
         } finally {
             reader.close();
