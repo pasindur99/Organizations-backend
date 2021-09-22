@@ -51,15 +51,15 @@ public class OrganizationService {
         return org;
     }
 
-    public Organization saveOrganization(String name){
-        Organization organization = null;
+    public Organization saveOrganization(Organization organization){
+
         try{
             Connection connection = DatabaseConnection.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO organization (name) VALUES (?)",
                     Statement.RETURN_GENERATED_KEYS);
 
-            statement.setString(1,name);
+            statement.setString(1,organization.getName());
             statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -96,18 +96,16 @@ public class OrganizationService {
         }
     }
 
-    public Organization updateOrg (int id , String name) {
-        Organization organization = null;
-        System.out.println("idpan");
+    public Organization updateOrg (Organization organization) {
 
         try {
             Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE organization SET name = ? WHERE id = ? ");
-            statement.setString(1,name);
-            statement.setInt(2,id);
+            statement.setString(1, organization.getName());
+            statement.setInt(2,organization.getId());
             statement.executeUpdate();
             statement.close();
-            organization = getOne(id);
+            organization = getOne(organization.getId());
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
