@@ -51,15 +51,15 @@ public class OrganizationService {
         return org;
     }
 
-    public Organization saveOrganization(String name){
-        Organization organization = null;
+    public Organization saveOrganization(Organization organization){
+
         try{
             Connection connection = DatabaseConnection.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO organization (name) VALUES (?)",
                     Statement.RETURN_GENERATED_KEYS);
 
-            statement.setString(1,name);
+            statement.setString(1,organization.getName());
             statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {

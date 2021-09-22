@@ -35,8 +35,7 @@ public class OrganizationController extends HttpServlet{
         Gson gson = new Gson();
         Organization newOrganization = gson.fromJson(org.toString(), Organization.class);
 
-        String name = newOrganization.getName();
-        Organization organization = organizationService.saveOrganization(name);
+        Organization organization = organizationService.saveOrganization(newOrganization);
 
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
