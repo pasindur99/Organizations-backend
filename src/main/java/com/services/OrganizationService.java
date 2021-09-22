@@ -98,7 +98,6 @@ public class OrganizationService {
 
     public Organization updateOrg (int id , String name) {
         Organization organization = null;
-        System.out.println("idpan");
 
         try {
             Connection connection = DatabaseConnection.getConnection();

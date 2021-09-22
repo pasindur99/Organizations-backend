@@ -55,7 +55,8 @@ public class OrganizationController extends HttpServlet{
         Gson gson = new Gson();
         Organization newOrganization = gson.fromJson(org.toString(), Organization.class);
 
-        Organization organization = organizationService.saveOrganization(newOrganization.getName());
+        String name = newOrganization.getName();
+        Organization organization = organizationService.saveOrganization(name);
 
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
@@ -97,8 +98,23 @@ public class OrganizationController extends HttpServlet{
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        int id = Integer.parseInt(request.getParameter("id"));
-        String name = request.getParameter("name");
+        StringBuilder org = new StringBuilder();
+        BufferedReader reader = request.getReader();
+
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                org.append(line).append("\n");
+            }
+        } finally {
+            reader.close();
+        }
+
+        Gson gson = new Gson();
+        Organization updatedOrganization = gson.fromJson(org.toString(), Organization.class);
+
+        int id = updatedOrganization.getId();
+        String name = updatedOrganization.getName();
         Organization organization = organizationService.updateOrg(id,name);
 
         response.setContentType("text/json");
