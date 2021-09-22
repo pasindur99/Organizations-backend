@@ -33,13 +33,13 @@ public class OrganizationController extends HttpServlet{
         }
 
         Gson gson = new Gson();
-        Organization newOrganization = gson.fromJson(builder.toString(), Organization.class);
+        Organization organization = gson.fromJson(builder.toString(), Organization.class);
 
-        Organization organization = organizationService.saveOrganization(newOrganization);
+        Organization newOrganization = organizationService.saveOrganization(organization);
 
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(organization));
+        out.println(new Gson().toJson(newOrganization));
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -90,13 +90,13 @@ public class OrganizationController extends HttpServlet{
         }
 
         Gson gson = new Gson();
-        Organization updatedOrganization = gson.fromJson(builder.toString(), Organization.class);
+        Organization organization = gson.fromJson(builder.toString(), Organization.class);
 
-        Organization organization = organizationService.updateOrg(updatedOrganization);
+        Organization updatedOrganization = organizationService.updateOrg(organization);
 
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(organization));
+        out.println(new Gson().toJson(updatedOrganization));
     }
 }
 
