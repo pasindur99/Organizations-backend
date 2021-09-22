@@ -21,19 +21,19 @@ public class OrganizationController extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        StringBuilder org = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         BufferedReader reader = request.getReader();
         try {
             String line;
             while ((line = reader.readLine()) != null) {
-                org.append(line).append('\n');
+                builder.append(line).append('\n');
             }
         } finally {
             reader.close();
         }
 
         Gson gson = new Gson();
-        Organization newOrganization = gson.fromJson(org.toString(), Organization.class);
+        Organization newOrganization = gson.fromJson(builder.toString(), Organization.class);
 
         Organization organization = organizationService.saveOrganization(newOrganization);
 
@@ -77,20 +77,20 @@ public class OrganizationController extends HttpServlet{
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        StringBuilder org = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         BufferedReader reader = request.getReader();
 
         try {
             String line;
             while ((line = reader.readLine()) != null) {
-                org.append(line).append("\n");
+                builder.append(line).append("\n");
             }
         } finally {
             reader.close();
         }
 
         Gson gson = new Gson();
-        Organization updatedOrganization = gson.fromJson(org.toString(), Organization.class);
+        Organization updatedOrganization = gson.fromJson(builder.toString(), Organization.class);
 
         Organization organization = organizationService.updateOrg(updatedOrganization);
 
