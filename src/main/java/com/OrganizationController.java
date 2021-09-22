@@ -21,26 +21,6 @@ public class OrganizationController extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-//            Try 1
-//            StringBuffer jo = new StringBuffer();
-//            String line = null;
-//
-//            try {
-//                BufferedReader reader = request.getReader();
-//                while ((line = reader.readLine()) != null)
-//                    jo.append(line);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            try {
-//                JsonObject jsonObject =  HTTP.toJSONObject(jo.toString());
-//            } catch (JSONException e) {
-//                // crash and burn
-//                throw new IOException("Error parsing JSON request string");
-//            }
-
-//            Try 2
         StringBuilder org = new StringBuilder();
         BufferedReader reader = request.getReader();
         try {
