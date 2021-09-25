@@ -3,15 +3,17 @@ package com;
 import com.entities.Organization;
 import com.google.gson.Gson;
 import com.services.OrganizationService;
+import com.util.extractJson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static com.util.extractJson.toJson;
 
 
 @WebServlet("/organizations")
@@ -21,19 +23,8 @@ public class OrganizationController extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        StringBuilder builder = new StringBuilder();
-        BufferedReader reader = request.getReader();
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-        } finally {
-            reader.close();
-        }
-
-        Gson gson = new Gson();
-        Organization organization = gson.fromJson(builder.toString(), Organization.class);
+        extractJson toJson = new extractJson();
+        Organization organization = toJson(request);
 
         Organization newOrganization = organizationService.saveOrganization(organization);
 
@@ -77,20 +68,8 @@ public class OrganizationController extends HttpServlet{
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        StringBuilder builder = new StringBuilder();
-        BufferedReader reader = request.getReader();
-
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-        } finally {
-            reader.close();
-        }
-
-        Gson gson = new Gson();
-        Organization organization = gson.fromJson(builder.toString(), Organization.class);
+        extractJson toJson = new extractJson();
+        Organization organization = toJson(request);
 
         Organization updatedOrganization = organizationService.updateOrg(organization);
 
