@@ -1,7 +1,6 @@
 package com.services;
 
 import com.entities.Organization;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,11 +99,13 @@ public class OrganizationService {
 
         try {
             Connection connection = DatabaseConnection.getConnection();
+
             PreparedStatement statement = connection.prepareStatement("UPDATE organization SET name = ? WHERE id = ? ");
             statement.setString(1, organization.getName());
             statement.setInt(2,organization.getId());
             statement.executeUpdate();
             statement.close();
+
             organization = getOne(organization.getId());
 
         } catch (SQLException throwable) {
