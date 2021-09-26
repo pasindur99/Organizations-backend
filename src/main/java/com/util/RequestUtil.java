@@ -2,14 +2,13 @@ package com.util;
 
 import com.entities.Organization;
 import com.google.gson.Gson;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public final class extractJson {
+public final class RequestUtil {
 
-    public static Organization toJson(HttpServletRequest request) throws IOException {
+    public static Organization expect(HttpServletRequest request) throws IOException {
 
         StringBuilder builder = new StringBuilder();
         BufferedReader reader = request.getReader();
