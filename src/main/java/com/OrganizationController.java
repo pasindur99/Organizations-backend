@@ -1,16 +1,14 @@
 package com;
 
 import com.entities.Organization;
-import com.google.gson.Gson;
 import com.services.OrganizationService;
-import com.util.RequestUtil;
+import com.util.ServletUtil;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 
 @WebServlet("/organizations")
@@ -19,32 +17,20 @@ public class OrganizationController extends HttpServlet{
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
-        Organization organization = RequestUtil.expect(request);
-
-        Organization newOrganization = organizationService.saveOrganization(organization);
-
-        response.setContentType("text/json");
-        PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(newOrganization));
+        Organization organization = ServletUtil.expect( Organization.class, request);
+        ServletUtil.respond(organizationService.saveOrganization(organization), response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
         String id = request.getParameter("id");
-
         if (id == null){
-            response.setContentType("text/json");
-            PrintWriter out = response.getWriter();
-            out.println(new Gson().toJson(organizationService.getAll()));
+            ServletUtil.respond(organizationService.getAll(), response);
         }else{
-            response.setContentType("text/json");
-            PrintWriter out = response.getWriter();
             Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
 
             if(organization != null){
-                out.println(new Gson().toJson(organizationService.getOne(Integer.parseInt(request.getParameter("id")))));
+                ServletUtil.respond(organizationService.getOne(Integer.parseInt(request.getParameter("id"))), response);
             }else{
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -54,23 +40,15 @@ public class OrganizationController extends HttpServlet{
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
         int id = Integer.parseInt(request.getParameter("id"));
         organizationService.deleteOrg(id);
-
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
-        Organization organization = RequestUtil.expect(request);
-
-        Organization updatedOrganization = organizationService.updateOrg(organization);
-
-        response.setContentType("text/json");
-        PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(updatedOrganization));
+        Organization organization = ServletUtil.expect(Organization.class, request);
+        ServletUtil.respond(organizationService.updateOrg(organization), response);
     }
 }
 
