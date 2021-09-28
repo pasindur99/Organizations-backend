@@ -1,6 +1,5 @@
 package com.util;
 
-import com.entities.Organization;
 import com.google.gson.Gson;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,10 +13,10 @@ public final class ServletUtil {
         return gson.fromJson(request.getReader(), Class);
     }
 
-    public static void response (Organization organization ,HttpServletResponse response) throws IOException {
+    public static void response (HttpServletResponse response, Object payload) throws IOException {
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(organization));
+        out.println(new Gson().toJson(payload));
     }
 
 }
