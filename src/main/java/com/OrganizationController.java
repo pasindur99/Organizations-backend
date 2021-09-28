@@ -3,7 +3,7 @@ package com;
 import com.entities.Organization;
 import com.google.gson.Gson;
 import com.services.OrganizationService;
-import com.util.RequestUtil;
+import com.util.ServletUtil;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,13 +20,9 @@ public class OrganizationController extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        Organization organization = RequestUtil.expect(request);
-
-        Organization newOrganization = organizationService.saveOrganization(organization);
-
-        response.setContentType("text/json");
-        PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(newOrganization));
+        Organization organization = ServletUtil.expect(request, Organization.class);
+        Organization save = organizationService.saveOrganization(organization);
+        ServletUtil.response(save, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -34,13 +30,12 @@ public class OrganizationController extends HttpServlet{
 
         String id = request.getParameter("id");
 
+        response.setContentType("text/json");
+        PrintWriter out = response.getWriter();
+
         if (id == null){
-            response.setContentType("text/json");
-            PrintWriter out = response.getWriter();
             out.println(new Gson().toJson(organizationService.getAll()));
         }else{
-            response.setContentType("text/json");
-            PrintWriter out = response.getWriter();
             Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
 
             if(organization != null){
@@ -64,13 +59,10 @@ public class OrganizationController extends HttpServlet{
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
 
-        Organization organization = RequestUtil.expect(request);
+        Organization organization = ServletUtil.expect(request, Organization.class);
+        Organization update = organizationService.updateOrg(organization);
+        ServletUtil.response(update, response);
 
-        Organization updatedOrganization = organizationService.updateOrg(organization);
-
-        response.setContentType("text/json");
-        PrintWriter out = response.getWriter();
-        out.println(new Gson().toJson(updatedOrganization));
     }
 }
 
