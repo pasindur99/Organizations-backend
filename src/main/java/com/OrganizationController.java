@@ -3,7 +3,6 @@ package com;
 import com.entities.Organization;
 import com.services.OrganizationService;
 import com.util.ServletUtil;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,20 +17,20 @@ public class OrganizationController extends HttpServlet{
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-        Organization organization = ServletUtil.expect(request, Organization.class);
-        ServletUtil.respond(response, organizationService.saveOrganization(organization));
+        Organization organization = ServletUtil.expect( Organization.class, request);
+        ServletUtil.respond(organizationService.saveOrganization(organization), response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         String id = request.getParameter("id");
         if (id == null){
-            ServletUtil.respond(response, organizationService.getAll());
+            ServletUtil.respond(organizationService.getAll(), response);
         }else{
             Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
 
             if(organization != null){
-                ServletUtil.respond(response, organizationService.getOne(Integer.parseInt(request.getParameter("id"))));
+                ServletUtil.respond(organizationService.getOne(Integer.parseInt(request.getParameter("id"))), response);
             }else{
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -48,8 +47,8 @@ public class OrganizationController extends HttpServlet{
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-        Organization organization = ServletUtil.expect(request, Organization.class);
-        ServletUtil.respond(response, organizationService.updateOrg(organization));
+        Organization organization = ServletUtil.expect(Organization.class, request);
+        ServletUtil.respond(organizationService.updateOrg(organization), response);
     }
 }
 

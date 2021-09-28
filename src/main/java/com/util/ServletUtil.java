@@ -8,12 +8,12 @@ import java.io.PrintWriter;
 
 public final class ServletUtil {
 
-    public static <T> T expect(HttpServletRequest request , Class<T> Class) throws IOException {
+    public static <T> T expect(Class<T> Class, HttpServletRequest request) throws IOException {
         Gson gson = new Gson();
         return gson.fromJson(request.getReader(), Class);
     }
 
-    public static void respond(HttpServletResponse response, Object payload) throws IOException {
+    public static void respond(Object payload, HttpServletResponse response) throws IOException {
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
         out.println(new Gson().toJson(payload));
