@@ -19,7 +19,6 @@ public class OrganizationController extends HttpServlet{
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
         Organization organization = ServletUtil.expect(request, Organization.class);
         Organization save = organizationService.saveOrganization(organization);
         ServletUtil.response(save, response);
@@ -27,9 +26,7 @@ public class OrganizationController extends HttpServlet{
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
         String id = request.getParameter("id");
-
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
 
@@ -49,20 +46,16 @@ public class OrganizationController extends HttpServlet{
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
         int id = Integer.parseInt(request.getParameter("id"));
         organizationService.deleteOrg(id);
-
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
         Organization organization = ServletUtil.expect(request, Organization.class);
         Organization update = organizationService.updateOrg(organization);
         ServletUtil.response(update, response);
-
     }
 }
 
