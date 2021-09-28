@@ -13,7 +13,7 @@ public final class ServletUtil {
         return gson.fromJson(request.getReader(), Class);
     }
 
-    public static void response (HttpServletResponse response, Object payload) throws IOException {
+    public static void respond(HttpServletResponse response, Object payload) throws IOException {
         response.setContentType("text/json");
         PrintWriter out = response.getWriter();
         out.println(new Gson().toJson(payload));

@@ -20,7 +20,7 @@ public class OrganizationController extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         Organization organization = ServletUtil.expect(request, Organization.class);
-        ServletUtil.response(response, organizationService.saveOrganization(organization));
+        ServletUtil.respond(response, organizationService.saveOrganization(organization));
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -53,7 +53,7 @@ public class OrganizationController extends HttpServlet{
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         Organization organization = ServletUtil.expect(request, Organization.class);
-        ServletUtil.response(response, organizationService.updateOrg(organization));
+        ServletUtil.respond(response, organizationService.updateOrg(organization));
     }
 }
 
