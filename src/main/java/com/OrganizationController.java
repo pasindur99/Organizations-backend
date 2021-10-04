@@ -6,7 +6,6 @@ import com.exception.ErrorResource;
 import com.exception.NotFoundException;
 import com.services.OrganizationService;
 import com.util.ServletUtil;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,18 +18,20 @@ import java.io.IOException;
 public class OrganizationController extends HttpServlet {
     private static final OrganizationService organizationService = new OrganizationService();
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
             Organization organization = ServletUtil.expect(Organization.class, request);
             ServletUtil.respond(organizationService.saveOrganization(organization), response);
-        } catch (BadRequestException e) {
+        } catch (BadRequestException | NotFoundException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             ErrorResource error = new ErrorResource("Bad Request", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
             ServletUtil.respond(error, response);
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
@@ -42,28 +43,21 @@ public class OrganizationController extends HttpServlet {
                 ServletUtil.respond(organization, response);
             }
         } catch (NotFoundException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ErrorResource error = new ErrorResource("Bad Request", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
-            ServletUtil.respond(error, response);
-        }
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        try {
-            organizationService.deleteOrg(id);
-        } catch (NotFoundException e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
             ServletUtil.respond(error, response);
         }
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response){
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        organizationService.deleteOrg(id);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Organization organization = ServletUtil.expect(Organization.class, request);
             ServletUtil.respond(organizationService.updateOrg(organization), response);
@@ -79,4 +73,3 @@ public class OrganizationController extends HttpServlet {
         }
     }
 }
-

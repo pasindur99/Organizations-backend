@@ -1,6 +1,7 @@
 package com.services;
 
 import com.entities.Organization;
+import com.exception.BadRequestException;
 import com.exception.NotFoundException;
 
 import java.sql.*;
@@ -21,8 +22,8 @@ public class OrganizationService {
                 org.setName(rs.getString("name"));
                 organizations.add(org);
             }
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
         return organizations;
     }
@@ -40,13 +41,13 @@ public class OrganizationService {
             } else {
                 throw new NotFoundException("Organization doesn't exists for id:"+ id);
             }
-        } catch (SQLException | ClassNotFoundException throwable) {
+        } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
         return null;
     }
 
-    public Organization saveOrganization(Organization organization){
+    public Organization saveOrganization(Organization organization) throws NotFoundException, BadRequestException {
         try{
             Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement("INSERT INTO organization (name) VALUES (?)",
@@ -58,22 +59,17 @@ public class OrganizationService {
                     organization = getOne(generatedKeys.getInt(1));
                 }
                 else {
-                    throw new SQLException("Creating organisation failed, no ID obtained.");
+                    throw new BadRequestException("Creating organisation failed, no ID obtained.");
                 }
-            } catch (NotFoundException e) {
-                e.printStackTrace();
             }
             statement.close();
-
         } catch (SQLException throwable) {
             throwable.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
         return organization;
     }
 
-    public void deleteOrg (int id) throws NotFoundException {
+    public void deleteOrg (int id) {
         try {
             Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement("DELETE FROM organization WHERE id = ?");
@@ -82,9 +78,6 @@ public class OrganizationService {
             statement.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new NotFoundException("Organization not found for id:" + id);
         }
     }
 
@@ -99,10 +92,10 @@ public class OrganizationService {
             organization = getOne(organization.getId());
         } catch (SQLException throwable) {
             throwable.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (NotFoundException e) {
             e.printStackTrace();
+            throw new NotFoundException("Organization not found");
         }
         return organization;
     }
 }
-

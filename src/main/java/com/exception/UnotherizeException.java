@@ -8,5 +8,3 @@ public class UnotherizeException extends Exception {
         super(message);
     }
 }
-
-
