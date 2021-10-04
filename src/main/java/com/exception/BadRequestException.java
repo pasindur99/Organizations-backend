@@ -6,3 +6,5 @@ public class BadRequestException extends Exception {
         super(message);
     }
 }
+
+
