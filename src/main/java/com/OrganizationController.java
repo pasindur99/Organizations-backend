@@ -50,10 +50,24 @@ public class OrganizationController extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response){
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        int id = Integer.parseInt(request.getParameter("id"));
-        organizationService.deleteOrg(id);
+        try {
+            String id = request.getParameter("id");
+            if (id == null) {
+                throw new BadRequestException("Organization doesn't exists for id:"+ id);
+            }else {
+                Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
+                organizationService.deleteOrganization(organization);
+            }
+        } catch (BadRequestException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ServletUtil.respond(error, response);
+        }
     }
 
     @Override

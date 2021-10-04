@@ -69,8 +69,9 @@ public class OrganizationService {
         return organization;
     }
 
-    public void deleteOrg (int id) {
+    public void deleteOrganization(Organization organization) {
         try {
+            int id = organization.getId();
             Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement("DELETE FROM organization WHERE id = ?");
             statement.setInt(1,id);
