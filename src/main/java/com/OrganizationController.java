@@ -1,54 +1,95 @@
 package com;
 
 import com.entities.Organization;
+import com.exception.BadRequestException;
+import com.exception.ErrorResource;
+import com.exception.NotFoundException;
 import com.services.OrganizationService;
 import com.util.ServletUtil;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 
 @WebServlet("/organizations")
-public class OrganizationController extends HttpServlet{
+public class OrganizationController extends HttpServlet {
     private static final OrganizationService organizationService = new OrganizationService();
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
-        Organization organization = ServletUtil.expect( Organization.class, request);
-        ServletUtil.respond(organizationService.saveOrganization(organization), response);
-    }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
-        String id = request.getParameter("id");
-        if (id == null){
-            ServletUtil.respond(organizationService.getAll(), response);
-        }else{
-            Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
-
-            if(organization != null){
-                ServletUtil.respond(organizationService.getOne(Integer.parseInt(request.getParameter("id"))), response);
-            }else{
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            }
+        try {
+            Organization organization = ServletUtil.expect(Organization.class, request);
+            ServletUtil.respond(organizationService.saveOrganization(organization), response);
+        } catch (BadRequestException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResource error = new ErrorResource("Bad Request", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ServletUtil.respond(error, response);
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
+            ServletUtil.respond(error, response);
         }
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        organizationService.deleteOrg(id);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try {
+            String id = request.getParameter("id");
+            if (id == null) {
+                ServletUtil.respond(organizationService.getAll(), response);
+            } else {
+                Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
+                ServletUtil.respond(organization, response);
+            }
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
+            ServletUtil.respond(error, response);
+        }
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
-        Organization organization = ServletUtil.expect(Organization.class, request);
-        ServletUtil.respond(organizationService.updateOrg(organization), response);
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try {
+            String id = request.getParameter("id");
+            if (id == null) {
+                throw new BadRequestException("No organization id was found");
+            }else {
+                Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
+                organizationService.deleteOrganization(organization);
+            }
+        } catch (BadRequestException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResource error = new ErrorResource("Bad Request", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ServletUtil.respond(error, response);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
+            ServletUtil.respond(error, response);
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Organization organization = ServletUtil.expect(Organization.class, request);
+            ServletUtil.respond(organizationService.updateOrg(organization), response);
+
+        } catch (BadRequestException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResource error = new ErrorResource("Bad Request", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ServletUtil.respond(error, response);
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
+            ServletUtil.respond(error, response);
+        }
     }
 }
-

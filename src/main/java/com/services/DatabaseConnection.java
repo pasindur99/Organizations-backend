@@ -10,7 +10,7 @@ public class DatabaseConnection {
 
     private static Connection connection;
 
-    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+    public static Connection getConnection() {
 
         if (connection == null){
             initializeDatabase();
@@ -18,17 +18,21 @@ public class DatabaseConnection {
         return connection;
     }
     
-    private static void initializeDatabase() throws SQLException, ClassNotFoundException{
+    private static void initializeDatabase() {
 
         String dbDriver = Driver.class.getName();
         String dbURL = "jdbc:mysql://localhost:3306/";
-
         String dbName = "org";
         String dbUsername = "siri";
         String dbPassword = "siri123";
 
-        Class.forName(dbDriver);
-        connection = DriverManager.getConnection(dbURL + dbName, dbUsername, dbPassword);
+        try {
+            Class.forName(dbDriver);
+            connection = DriverManager.getConnection(dbURL + dbName, dbUsername, dbPassword);
+        } catch (SQLException | ClassNotFoundException throwable) {
+            throwable.printStackTrace();
+            System.exit(0);
+        }
     }
 }
 

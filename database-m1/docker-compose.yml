@@ -3,8 +3,11 @@ version: '3.1'
 services:
   db:
     image: mysql:5.6
-    command: "mysqld --character-set-server=utf8 --collation-server=utf8_general_ci"
+    platform: linux/x86_64
     restart: always
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ../init.sql:/data/application/init.sql
     environment:
       MYSQL_USER: siri
       MYSQL_PASSWORD: siri123
