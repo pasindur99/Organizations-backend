@@ -12,4 +12,3 @@ services:
       MYSQL_DATABASE: org
     ports:
       - 3306:3306
-      -

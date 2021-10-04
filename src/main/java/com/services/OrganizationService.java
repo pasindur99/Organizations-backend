@@ -93,9 +93,6 @@ public class OrganizationService {
             organization = getOne(organization.getId());
         } catch (SQLException throwable) {
             throwable.printStackTrace();
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            throw new NotFoundException("Organization not found");
         }
         return organization;
     }

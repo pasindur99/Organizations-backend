@@ -24,9 +24,13 @@ public class OrganizationController extends HttpServlet {
         try {
             Organization organization = ServletUtil.expect(Organization.class, request);
             ServletUtil.respond(organizationService.saveOrganization(organization), response);
-        } catch (BadRequestException | NotFoundException e) {
+        } catch (BadRequestException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             ErrorResource error = new ErrorResource("Bad Request", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ServletUtil.respond(error, response);
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
             ServletUtil.respond(error, response);
         }
     }
@@ -55,17 +59,19 @@ public class OrganizationController extends HttpServlet {
         try {
             String id = request.getParameter("id");
             if (id == null) {
-                throw new BadRequestException("Organization doesn't exists for id:"+ id);
+                throw new BadRequestException("No organization id was found");
             }else {
                 Organization organization = organizationService.getOne(Integer.parseInt(request.getParameter("id")));
                 organizationService.deleteOrganization(organization);
             }
         } catch (BadRequestException e) {
-            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResource error = new ErrorResource("Bad Request", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ServletUtil.respond(error, response);
         } catch (NotFoundException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
             ServletUtil.respond(error, response);
         }
     }
@@ -82,7 +88,7 @@ public class OrganizationController extends HttpServlet {
             ServletUtil.respond(error, response);
         } catch (NotFoundException e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResource error = new ErrorResource("Not found", e.getMessage(), HttpServletResponse.SC_NOT_FOUND);
             ServletUtil.respond(error, response);
         }
     }
