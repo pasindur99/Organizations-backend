@@ -1,8 +1,11 @@
 package com.entities;
 
+import com.anotations.Required;
+
 public class Organization {
 
     private int id;
+    @Required
     private String name;
 
     public void addOrg(int id, String name){

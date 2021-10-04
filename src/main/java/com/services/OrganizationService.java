@@ -1,6 +1,8 @@
 package com.services;
 
 import com.entities.Organization;
+import com.exception.NotFoundException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +27,23 @@ public class OrganizationService {
         return organizations;
     }
 
-    public Organization getOne(int id){
-        Organization org = null;
+    public Organization getOne(int id) throws NotFoundException {
         try {
             Connection connection  = DatabaseConnection.getConnection();
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select * from organization where id = " + id);
             if (rs.next()){
-                org = new Organization();
-                org.setId(rs.getInt("id"));
-                org.setName(rs.getString("name"));
+                Organization organization = new Organization();
+                organization.setId(rs.getInt("id"));
+                organization.setName(rs.getString("name"));
+                return organization;
+            } else {
+                throw new NotFoundException("Organization doesn't exists for id:"+ id);
             }
         } catch (SQLException | ClassNotFoundException throwable) {
             throwable.printStackTrace();
         }
-        return org;
+        return null;
     }
 
     public Organization saveOrganization(Organization organization){
@@ -56,6 +60,8 @@ public class OrganizationService {
                 else {
                     throw new SQLException("Creating organisation failed, no ID obtained.");
                 }
+            } catch (NotFoundException e) {
+                e.printStackTrace();
             }
             statement.close();
 
@@ -67,7 +73,7 @@ public class OrganizationService {
         return organization;
     }
 
-    public void deleteOrg (int id){
+    public void deleteOrg (int id) throws NotFoundException {
         try {
             Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement("DELETE FROM organization WHERE id = ?");
@@ -78,10 +84,11 @@ public class OrganizationService {
             throwable.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            throw new NotFoundException("Organization not found for id:" + id);
         }
     }
 
-    public Organization updateOrg (Organization organization) {
+    public Organization updateOrg (Organization organization) throws NotFoundException {
         try {
             Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE organization SET name = ? WHERE id = ? ");
