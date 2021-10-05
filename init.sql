@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS `organization` (
 ) ENGINE=InnoDB;
 CREATE TABLE IF NOT EXISTS `user` (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
+    emailId VARCHAR(100),
     password VARCHAR (20)
 ) ENGINE=InnoDB;
